@@ -16,14 +16,11 @@ public class StarFileAnalyzer {
         String keyWord = pathAndKeyWord[1];
 
 
-
-
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         FileStatistics fileStatistics = fileAnalyzer.analyzer(path, keyWord);
         printSentencesWithKeyWord(fileStatistics.getSentences());
         printCount(fileStatistics.wordCount);
     }
-
 
 
     static String[] getPathAndKey() throws IOException {
