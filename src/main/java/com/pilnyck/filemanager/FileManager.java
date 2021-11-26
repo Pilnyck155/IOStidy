@@ -1,26 +1,24 @@
 package com.pilnyck.filemanager;
 
 import java.io.*;
-// /home/vitaliu/Documents
 
 public class FileManager {
     private static int counterFiles = 0;
     private static int counterDirectories = 0;
-    //private static String endPointPath = "/home/vitaliu/IdeaProjects/IOStudy/";
 
     // принимает путь к папке,
     //возвращает количество файлов в папке и всех подпапках по пути
     public int countFiles(String path) {
-        int counter = 0;
         if (path != "") {
             File file = new File(path);
             File[] listFiles = file.listFiles();
-            for (File listFile : listFiles) {
-                if (listFile.isFile()) {
-                    counterFiles++;
-                    //counter++;
-                } else {
-                    countFiles(listFile.getPath());
+            if (listFiles != null){
+                for (File listFile : listFiles) {
+                    if (listFile.isFile()) {
+                        counterFiles++;
+                    } else {
+                        countFiles(listFile.getPath());
+                    }
                 }
             }
         }
@@ -31,14 +29,15 @@ public class FileManager {
     //- принимает путь к папке,
     // возвращает количество папок в папке и всех подпапках по пути
     public int countDirs(String path) {
-        int counter = 0;
         if (path != "") {
             File file = new File(path);
             File[] listFiles = file.listFiles();
-            for (File listFile : listFiles) {
-                if (listFile.isDirectory()) {
-                    counterDirectories++;
-                    countDirs(listFile.getPath());
+            if (listFiles != null){
+                for (File listFile : listFiles) {
+                    if (listFile.isDirectory()) {
+                        counterDirectories++;
+                        countDirs(listFile.getPath());
+                    }
                 }
             }
         }
@@ -56,8 +55,10 @@ public class FileManager {
                 if (fileTo.isDirectory()){
                     fileTo.createNewFile();
                 }
-                try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file.getPath()));
-                     BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(fileTo.getPath()))) {
+                try (BufferedInputStream bufferedInputStream =
+                             new BufferedInputStream(new FileInputStream(file.getPath()));
+                     BufferedOutputStream bufferedOutputStream =
+                             new BufferedOutputStream(new FileOutputStream(fileTo.getPath()))) {
                     byte[] byteArray = bufferedInputStream.readAllBytes();
                     bufferedOutputStream.write(byteArray);
                 }
@@ -71,8 +72,23 @@ public class FileManager {
     //Параметр from - путь к файлу или папке, параметр to - путь к папке куда будет производиться копирование.
     public void move(String from, String to) {
         File fileFrom = new File(from);
-        File fileTo = new File(to);
-        fileFrom.renameTo(fileTo);
+        File fileTo = new File(to, fileFrom.getName());
+        fileFrom.renameTo(new File(fileTo.getAbsolutePath()));
+    }
+
+    public void moveDirs(String from, String to) throws IOException {
+        File dirFrom = new File(from);
+        File dirTo = new File(to, dirFrom.getName());
+        dirTo.mkdir();
+        File[] list = dirFrom.listFiles();
+        for (File listOfFile : list) {
+            if (listOfFile.isFile()){
+                move(listOfFile.getAbsolutePath(), dirTo.getAbsolutePath());
+            } else {
+                moveDirs(listOfFile.getAbsolutePath(), new File(dirTo, listOfFile.getName()).getAbsolutePath());
+            }
+        }
+        move(dirFrom.getAbsolutePath(), dirTo.getAbsolutePath());
     }
 
     private void copyDir(String from, String to) throws IOException {

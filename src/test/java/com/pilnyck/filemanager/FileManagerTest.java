@@ -1,6 +1,5 @@
 package com.pilnyck.filemanager;
 
-import com.pilnyck.fileanalyzer.FileStatistics;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -8,36 +7,32 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileManagerTest {
-    public static final String pathForTestDir = "DirectoryTest";
-    public static final String pathFromCopyAndMoveFiles = "DirectoryTest/FilesDirectoryTestFromCopyAndMove";
-    public static final String pathToCopyAndMoveFiles = "DirectoryTest/FilesDirectoryTestToCopyAndMove";
-    public static final String pathEmptyDir = "DirectoryTest/EmptyDirectoryTest";
+    public static final String DIRECTORY_TEST = "TestDirectory";
+    public static final String COPY_FROM = "TestFromCopyDirectory";
+    public static final String COPY_TO = "TestToCopyDirectory";
+    public static final String EMPTY_DIR = "EmptyDirectory";
+    FileManager fileManager = new FileManager();
 
     @BeforeEach
     void before() throws IOException {
-        //FileManager fileManager = new FileManager();
-
-        File testDir = new File(pathForTestDir);
+        // 6 folders, 4 files
+        File testDir = new File(DIRECTORY_TEST);
         testDir.mkdir();
-        String dirPath = testDir.getPath();
-        File file1 = new File(dirPath,"test1.txt");
+        //String dirPath = testDir.getPath();
+        File file1 = new File(DIRECTORY_TEST,"test1.txt");
         file1.createNewFile();
-        File file2 = new File(dirPath,"test2.txt");
+        File file2 = new File(DIRECTORY_TEST,"test2.txt");
         file2.createNewFile();
 
         File testDir1 = new File(testDir, "Dir1");
         testDir1.mkdir();
         File testDir11 = new File(testDir1, "Dir11");
         testDir11.mkdir();
-        File testDir12 = new File(testDir1, "Dir12");
-        testDir12.mkdir();
-        File file11 = new File(testDir1,"test11.txt");
+        File file11 = new File(testDir11,"test11.txt");
         file11.createNewFile();
 
         File testDir2 = new File(testDir, "Dir2");
@@ -49,76 +44,67 @@ public class FileManagerTest {
         testDir3.mkdir();
         File testDir31 = new File(testDir3, "Dir31");
         testDir31.mkdir();
-        File testDir32 = new File(testDir3, "Dir32");
-        testDir32.mkdir();
 
         File testDir4 = new File(testDir, "Dir4");
         testDir4.mkdir();
         File file41 = new File(testDir4,"test41.txt");
         file41.createNewFile();
-        File file42 = new File(testDir4,"test42.txt");
-        file42.createNewFile();
 
-        File testFromFileDir = new File(pathFromCopyAndMoveFiles);
+        File testFromFileDir = new File(COPY_FROM);
         testFromFileDir.mkdir();
         File file5 = new File(testFromFileDir,"test5.txt");
         file5.createNewFile();
+        File file6 = new File(testFromFileDir,"test6.txt");
+        file6.createNewFile();
 
-        File testToFileDir = new File(pathToCopyAndMoveFiles);
+        File testToFileDir = new File(COPY_TO);
         testToFileDir.mkdir();
 
-        File testEmptyDir = new File(pathEmptyDir);
+        File testEmptyDir = new File(EMPTY_DIR);
         testEmptyDir.mkdir();
     }
 
     @AfterEach
     void after() throws IOException {
-        File testDir = new File(pathForTestDir);
+        File testDir = new File(DIRECTORY_TEST);
+        File file1 = new File(DIRECTORY_TEST,"test1.txt");
+        file1.delete();
+        File file2 = new File(DIRECTORY_TEST,"test2.txt");
+        file2.delete();
 
-        File testDir4 = new File(testDir, "Dir4");
-        File file41 = new File(testDir4,"test41.txt");
-        file41.delete();
-        File file42 = new File(testDir4,"test42.txt");
-        file42.delete();
-        testDir4.delete();
-
-        File testDir3 = new File(testDir, "Dir3");
-        File testDir31 = new File(testDir3, "Dir31");
-        testDir31.delete();
-        File testDir32 = new File(testDir3, "Dir32");
-        testDir32.delete();
-        testDir3.delete();
+        File testDir1 = new File(testDir, "Dir1");
+        File testDir11 = new File(testDir1, "Dir11");
+        File file11 = new File(testDir11,"test11.txt");
+        file11.delete();
+        testDir11.delete();
+        testDir1.delete();
 
         File testDir2 = new File(testDir, "Dir2");
         File file21 = new File(testDir2,"test21.txt");
         file21.delete();
         testDir2.delete();
 
-        File testDir1 = new File(testDir, "Dir1");
-        File testDir11 = new File(testDir1, "Dir11");
-        testDir11.delete();
-        File testDir12 = new File(testDir1, "Dir12");
-        testDir12.delete();
-        File file11 = new File(testDir1,"test11.txt");
-        file11.delete();
-        testDir1.delete();
+        File testDir3 = new File(testDir, "Dir3");
+        File testDir31 = new File(testDir3, "Dir31");
+        testDir31.delete();
+        testDir3.delete();
 
-        String dirPath = testDir.getPath();
-        File file1 = new File(dirPath,"test1.txt");
-        file1.delete();
-        File file2 = new File(dirPath,"test2.txt");
-        file2.delete();
-        testDir.delete();
+        File testDir4 = new File(testDir, "Dir4");
+        File file41 = new File(testDir4,"test41.txt");
+        file41.delete();
+        testDir4.delete();
 
-        File testFromFileDir = new File(pathFromCopyAndMoveFiles);
-        testFromFileDir.delete();
+        File testFromFileDir = new File(COPY_FROM);
         File file5 = new File(testFromFileDir,"test5.txt");
         file5.delete();
+        File file6 = new File(testFromFileDir,"test6.txt");
+        file6.delete();
+        testFromFileDir.delete();
 
-        File testToFileDir = new File(pathToCopyAndMoveFiles);
+        File testToFileDir = new File(COPY_TO);
         testToFileDir.delete();
 
-        File testEmptyDir = new File(pathEmptyDir);
+        File testEmptyDir = new File(EMPTY_DIR);
         testEmptyDir.delete();
 
         testDir.delete();
@@ -128,19 +114,16 @@ public class FileManagerTest {
     @DisplayName("file count method work correct")
     @Test
     public void testFileCountFilesMethod() {
-        FileManager fileManager = new FileManager();
-        int actual = fileManager.countFiles(pathForTestDir);
+        int actual = fileManager.countFiles(DIRECTORY_TEST);
 
-        assertEquals(10, actual);
+        assertEquals(5, actual);
     }
 
 
     @DisplayName("file count method work correct on empty directory")
     @Test
     public void testFileCountFilesMethodOnEmptyDirectory() {
-        FileManager fileManager = new FileManager();
-
-        int actual = fileManager.countFiles(pathEmptyDir);
+        int actual = fileManager.countFiles(EMPTY_DIR);
         int expected = 0;
         assertEquals(expected, actual);
     }
@@ -149,47 +132,37 @@ public class FileManagerTest {
     @DisplayName("directory count method work correct")
     @Test
     public void testDirCountMethod() {
-        FileManager fileManager = new FileManager();
-        int actual = fileManager.countDirs(pathForTestDir);
-
-        assertEquals(11, actual);
+        int actual = fileManager.countDirs(DIRECTORY_TEST);
+        assertEquals(6, actual);
     }
 
     @DisplayName("copy files method work correct")
     @Test
     public void testCopyFilesMethod() throws IOException {
-        FileManager fileManager = new FileManager();
-
-        File file5 = new File(pathFromCopyAndMoveFiles, "test5.txt");
-
+        File file5 = new File(COPY_FROM, "test5.txt");
         assertTrue(file5.exists());
 
+        fileManager.copy(file5.getAbsolutePath(), COPY_TO);
 
-        File testToFileDir = new File(pathToCopyAndMoveFiles);
-        testToFileDir.exists();
-
-        fileManager.copy(file5.getAbsolutePath(), testToFileDir.getPath());
-
-        File file15 = new File(testToFileDir, "test5.txt");
+        File file15 = new File(COPY_TO, "test5.txt");
         assertTrue(file15.exists());
     }
 
     @DisplayName("copy files method work correct")
     @Test
     public void testCopyFilesMethodWithAllInformationInFile() throws IOException {
-        FileManager fileManager = new FileManager();
-        File file11 = new File(pathForTestDir, "test11.txt");
-        file11.createNewFile();
-        assertTrue(file11.exists());
-        FileOutputStream fileOutputStream = new FileOutputStream(file11);
-        fileOutputStream.write(("Hello IO").getBytes(StandardCharsets.UTF_8));
+        File file5 = new File(COPY_FROM, "test5.txt");
+        file5.createNewFile();
+        assertTrue(file5.exists());
+        FileOutputStream fileOutputStream = new FileOutputStream(file5);
+        fileOutputStream.write(("Hello Dear Friends!!").getBytes(StandardCharsets.UTF_8));
         fileOutputStream.flush();
         fileOutputStream.close();
 
-        long expected = file11.length();
+        long expected = file5.length();
 
-        fileManager.copy(file11.getAbsolutePath(), pathToCopyAndMoveFiles);
-        File file6 = new File(pathToCopyAndMoveFiles, file11.getName());
+        fileManager.copy(file5.getAbsolutePath(), COPY_TO);
+        File file6 = new File(COPY_TO, file5.getName());
         assertTrue(file6.exists());
 
         long actual = file6.length();
@@ -199,13 +172,26 @@ public class FileManagerTest {
     @DisplayName("move files method work correct")
     @Test
     public void testMoveFilesMethod() {
-        FileManager fileManager = new FileManager();
-        File file = new File(pathFromCopyAndMoveFiles, "test11.txt");
-        fileManager.move(file.getPath(), pathToCopyAndMoveFiles);
+        File file1 = new File(DIRECTORY_TEST, "test1.txt");
+        fileManager.move(file1.getAbsolutePath(), COPY_TO);
+        File movedFile = new File(COPY_TO, "test1.txt");
 
-        File movedFile = new File(pathToCopyAndMoveFiles, "test11.txt");
-
-        assertFalse(file.exists());
+        assertFalse(file1.exists());
+        System.out.println(file1.getAbsolutePath());
         assertTrue(movedFile.exists());;
+    }
+
+    @DisplayName("move directories method work correct")
+    @Test
+    public void testMoveDirMethod() throws IOException {
+        File testDir1 = new File(DIRECTORY_TEST, "Dir1");
+
+        assertTrue(testDir1.isDirectory());
+        assertTrue(testDir1.exists());
+
+        fileManager.moveDirs(testDir1.getAbsolutePath(), COPY_TO);
+        File movedDir = new File(COPY_TO, "Dir1");
+        assertTrue(movedDir.exists());
+        assertFalse(testDir1.exists());
     }
 }
