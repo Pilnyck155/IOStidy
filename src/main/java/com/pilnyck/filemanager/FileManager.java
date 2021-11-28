@@ -12,7 +12,7 @@ public class FileManager {
         if (path != "") {
             File file = new File(path);
             File[] listFiles = file.listFiles();
-            if (listFiles != null){
+            if (listFiles != null) {
                 for (File listFile : listFiles) {
                     if (listFile.isFile()) {
                         counterFiles++;
@@ -32,7 +32,7 @@ public class FileManager {
         if (path != "") {
             File file = new File(path);
             File[] listFiles = file.listFiles();
-            if (listFiles != null){
+            if (listFiles != null) {
                 for (File listFile : listFiles) {
                     if (listFile.isDirectory()) {
                         counterDirectories++;
@@ -52,7 +52,7 @@ public class FileManager {
             File fileTo = new File(to, file.getName());
             if (file.isFile()) {
                 fileTo.createNewFile();
-                if (fileTo.isDirectory()){
+                if (fileTo.isDirectory()) {
                     fileTo.createNewFile();
                 }
                 try (BufferedInputStream bufferedInputStream =
@@ -78,17 +78,22 @@ public class FileManager {
 
     public void moveDirs(String from, String to) throws IOException {
         File dirFrom = new File(from);
-        File dirTo = new File(to, dirFrom.getName());
-        dirTo.mkdir();
-        File[] list = dirFrom.listFiles();
-        for (File listOfFile : list) {
-            if (listOfFile.isFile()){
-                move(listOfFile.getAbsolutePath(), dirTo.getAbsolutePath());
-            } else {
-                moveDirs(listOfFile.getAbsolutePath(), new File(dirTo, listOfFile.getName()).getAbsolutePath());
-            }
+        File dirTo = new File(to);
+        //File dirTo = new File(to, dirFrom.getName());
+        if (!dirTo.exists()){
+            dirTo.mkdir();
         }
-        move(dirFrom.getAbsolutePath(), dirTo.getAbsolutePath());
+        File[] list = dirFrom.listFiles();
+        //if (list != null) {
+            for (File listOfFile : list) {
+                if (listOfFile.isFile()) {
+                    move(listOfFile.getAbsolutePath(), dirTo.getAbsolutePath());
+                } else {
+                    moveDirs(listOfFile.getAbsolutePath(), new File(dirTo, listOfFile.getName()).getAbsolutePath());
+                }
+            }
+            move(dirFrom.getAbsolutePath(), dirTo.getAbsolutePath());
+        //}
     }
 
     private void copyDir(String from, String to) throws IOException {
@@ -97,13 +102,15 @@ public class FileManager {
             File fileTo = new File(to);
             fileTo.mkdir();
             File[] files = file.listFiles();
-            for (File file1 : files) {
-                if (file1.isFile()) {
-                    copy(file1.getAbsolutePath(), fileTo.getAbsolutePath());
-                } else {
-                    copyDir(file1.getAbsolutePath(), fileTo.getAbsolutePath());
+            //if (file != null) {
+                for (File file1 : files) {
+                    if (file1.isFile()) {
+                        copy(file1.getAbsolutePath(), fileTo.getAbsolutePath());
+                    } else {
+                        copyDir(file1.getAbsolutePath(), fileTo.getAbsolutePath());
+                    }
                 }
-            }
+            //}
         }
     }
 }

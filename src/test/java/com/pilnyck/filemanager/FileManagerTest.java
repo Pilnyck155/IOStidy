@@ -102,6 +102,12 @@ public class FileManagerTest {
         testFromFileDir.delete();
 
         File testToFileDir = new File(COPY_TO);
+        File testDir100 = new File(testToFileDir, "Dir1");
+        File testDir1100 = new File(testDir100, "Dir11");
+        File file1100 = new File(testDir1100,"test11.txt");
+        file1100.delete();
+        testDir1100.delete();
+        testDir100.delete();
         testToFileDir.delete();
 
         File testEmptyDir = new File(EMPTY_DIR);
@@ -178,7 +184,7 @@ public class FileManagerTest {
 
         assertFalse(file1.exists());
         System.out.println(file1.getAbsolutePath());
-        assertTrue(movedFile.exists());;
+        assertTrue(movedFile.exists());
     }
 
     @DisplayName("move directories method work correct")
