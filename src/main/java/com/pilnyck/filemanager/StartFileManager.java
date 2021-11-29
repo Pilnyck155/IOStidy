@@ -1,23 +1,15 @@
 package com.pilnyck.filemanager;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.Scanner;
-import java.util.StringJoiner;
-
-// /home/vitaliu/IdeaProjects/IOStudy/src/main/resources/test7.txt
-///home/vitaliu/Documents/Horstman.pdf
 
 public class StartFileManager {
     public static void main(String[] args) throws IOException {
         FileManager fileManager = new FileManager();
         System.out.printf("Choose action, that you want. If you need help, enter help: ");
-        //String action = fileManager.getString();
         Scanner scanner = new Scanner(System.in);
         String action = scanner.nextLine();
-        //System.out.println("You choose: " + action + " !");
         anAction(action);
-        //System.out.println(fileManager.countDirs(action));
     }
 
     private static void anAction(String action) throws IOException {
@@ -65,4 +57,3 @@ public class StartFileManager {
         }
     }
 }
-

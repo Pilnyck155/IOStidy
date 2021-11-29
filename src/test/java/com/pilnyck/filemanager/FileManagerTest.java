@@ -105,6 +105,10 @@ public class FileManagerTest {
         File testDir100 = new File(testToFileDir, "Dir1");
         File testDir1100 = new File(testDir100, "Dir11");
         File file1100 = new File(testDir1100,"test11.txt");
+        File file51 = new File(testToFileDir, "test5.txt");
+        file51.delete();
+        File file111 = new File(testToFileDir, "test1.txt");
+        file111.delete();
         file1100.delete();
         testDir1100.delete();
         testDir100.delete();
